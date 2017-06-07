@@ -232,3 +232,21 @@ Sample Configuration
               type: output
               data: Server response %resp%
 ```
+
+
+Tip: Use Codematic on Raspberry Pi
+----------------------------------
+
+One very useful application scenario for Codematic CLi is using as Raspberry Pi to build a "headless" scanning station.
+
+This is very usefull, e.g. if you want to scan order documents in your facility to track the status, etc.
+
+In order to have a command or program run when the Pi boots, you can add commands to the `rc.local` file.
+
+On your Pi, edit the file `/etc/rc.local` using the editor of your choice. You must edit with root, for example:
+
+```
+sudo nano /etc/rc.local
+```
+
+Add commands below the comment, but leave the line `exit 0` at the end, then save the file and exit.

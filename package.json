@@ -2,7 +2,7 @@
   "author"      : "Peter Haider",
   "name"        : "codematic-cli",
   "description" : "CLI Tools to handle smart QR and bar codes",
-  "version"     : "0.1.0",
+  "version"     : "0.1.1",
   "repository"  : {
     "url": "https://github.com/dapepe/codematic-cli"
   },
@@ -13,11 +13,12 @@
   ],
   "main": "./lib/cli",
   "bin": {
-    "codemagic": "./bin/codematic"
+    "codematic": "./bin/codematic"
   },
   "dependencies": {
-    "api-cli"   : "~0.1.2",
-    "codematic" : "~0.1"
+    "api-cli"   : "latest",
+    "codematic" : "latest",
+    "js-yaml"   : "latest"
   },
   "engines": {
     "node": "*"
