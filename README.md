@@ -172,65 +172,64 @@ Sample Configuration
 
 ```yaml
 ---
-  ---
-  request:
-    url: https://cloud.zeyos.com/pepe/remotecall/barcodeapi
-    username: ''
-    password: ''
-  log:
-    error: log/error.log
-    default: log/default.log
-  rules:
-  - name: Test Request
-    input: "^X[0-9]+"
-    action:
-      type: request
-      route: "/"
-      then:
-        type: beep
-        count: 5
-        delay: 10
-        then:
-          type: output
-          data: Value stored %testvar%
-  - name: Store the barcode
-    input: "^A[0-9]+"
-    action:
-      type: store
-      var: testvar
-      then:
-        type: beep
-        count: 5
-        delay: 10
-        then:
-          type: output
-          data: Value stored %testvar%
-  - name: Scan new barcode for request
-    input: "^R[0-9]+"
-    action:
-      type: writefile
-      filename: test.txt
-      mode: append
-      data: Hallo %testvar%
-      then:
-        type: output
-        data: File written
-  - name: Check the wildcard
-    input: ".*"
-    action:
-      type: store
-      var: testvar
+request:
+  url: https://cloud.zeyos.com/pepe/remotecall/barcodeapi
+  username: ''
+  password: ''
+log:
+  error: log/error.log
+  default: log/default.log
+rules:
+- name: Test Request
+  input: "^X[0-9]+"
+  action:
+    type: request
+    route: "/"
+    then:
+      type: beep
+      count: 5
+      delay: 10
       then:
         type: output
         data: Value stored %testvar%
-        then:
-            type: request
-            method: GET
-            var: resp
-            route: /%testvar%
-            then:
-              type: output
-              data: Server response %resp%
+- name: Store the barcode
+  input: "^A[0-9]+"
+  action:
+    type: store
+    var: testvar
+    then:
+      type: beep
+      count: 5
+      delay: 10
+      then:
+        type: output
+        data: Value stored %testvar%
+- name: Scan new barcode for request
+  input: "^R[0-9]+"
+  action:
+    type: writefile
+    filename: test.txt
+    mode: append
+    data: Hallo %testvar%
+    then:
+      type: output
+      data: File written
+- name: Check the wildcard
+  input: ".*"
+  action:
+    type: store
+    var: testvar
+    then:
+      type: output
+      data: Value stored %testvar%
+      then:
+          type: request
+          method: GET
+          var: resp
+          route: /%testvar%
+          then:
+            type: output
+            data: Server response %resp%
 ```
 
 
@@ -241,12 +240,59 @@ One very useful application scenario for Codematic CLi is using as Raspberry Pi 
 
 This is very usefull, e.g. if you want to scan order documents in your facility to track the status, etc.
 
-In order to have a command or program run when the Pi boots, you can add commands to the `rc.local` file.
+### Step 1: Install latest Node JS and NPM
 
-On your Pi, edit the file `/etc/rc.local` using the editor of your choice. You must edit with root, for example:
+For Raspberry Pi Model A, B, B+ and Compute Module:
 
 ```
-sudo nano /etc/rc.local
+sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+sudo apt-get update
+sudo apt-get install -y nodejs 
+sudo apt-get install -y build-essential
 ```
 
-Add commands below the comment, but leave the line `exit 0` at the end, then save the file and exit.
+
+Then copy the files to `/usr/local`:
+
+```
+sudo cp -R * /usr/local/
+```
+
+That's it! To check Node.js is properly install and you have the right version, run the command `node -v`.
+
+
+### Step 2: Install Codematic with NPM
+
+Run the following command to install Codematic CLI:
+
+```
+npm install -g codematic-cli
+```
+
+You can now run codematic simply by typing `codematic`
+
+
+### Step 3: Create a config file
+
+Create a config file in `/etc/codematic.yml` with your rule set, such as the example file above.
+
+
+### Step 4: Start Codematic on Bootup
+
+In order to have a command or program run when the Pi boots, you can add commands to the `.bashrc` file.
+
+On your Pi, edit the file `/home/pi/.bashrc` using the editor of your choice. You must edit with root, for example:
+
+```
+nano ~/.bashrc
+```
+
+Now add Codematic to the end of the file then save the file and exit:
+
+```
+# .bashrc
+
+...
+
+codematic --config /etc/codematic.yaml --watch
+```
