@@ -185,7 +185,7 @@ rules:
   action:
     type: request
     route: "/"
-    then:
+    200:
       type: beep
       count: 5
       delay: 10
@@ -227,9 +227,12 @@ rules:
           method: GET
           var: resp
           route: /%testvar%
-          then:
+          200:
             type: output
             data: Server response %resp%
+          500:
+            type: output
+            data: Server error %resp%
 ```
 
 
@@ -247,7 +250,7 @@ For Raspberry Pi Model A, B, B+ and Compute Module:
 ```
 sudo curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt-get update
-sudo apt-get install -y nodejs 
+sudo apt-get install -y nodejs
 sudo apt-get install -y build-essential
 ```
 
